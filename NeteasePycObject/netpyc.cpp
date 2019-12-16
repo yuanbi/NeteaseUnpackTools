@@ -28,10 +28,12 @@ using namespace std;
 #define TYPE_UNKNOWN '?'
 #define TYPE_SET '<'
 #define TYPE_FROZENSET '>'
+#define TYPE_UNKNOWNg 'g'
 
-map<int, int> decrypt_opcode = {{1, 38}, {2, 46}, {3, 37}, {4, 66}, {5, 12}, {10, 35}, {11, 67}, {12, 81}, {13, 32}, {15, 9}, {19, 63}, {20, 70}, {21, 44}, {22, 36}, {23, 39}, {24, 57}, {25, 10}, {26, 52}, {28, 49}, {30, 86}, {31, 87}, {32, 88}, {33, 89}, {40, 24}, {41, 25}, {42, 26}, {43, 27}, {50, 14}, {51, 15}, {52, 16}, {53, 17}, {54, 8}, {55, 21}, {56, 55}, {57, 82}, {58, 34}, {59, 22}, {60, 65}, {61, 6}, {62, 58}, {63, 71}, {64, 43}, {65, 30}, {66, 19}, {67, 5}, {68, 60}, {71, 53}, {72, 42}, {73, 3}, {74, 48}, {75, 84}, {76, 77}, {77, 78}, {78, 85}, {79, 47}, {80, 51}, {81, 54}, {82, 50}, {83, 83}, {84, 74}, {85, 64}, {86, 31}, {87, 72}, {88, 45}, {89, 33}, {90, 145}, {91, 159}, {92, 125}, {93, 149}, {94, 157}, {95, 132}, {96, 95}, {97, 113}, {98, 111}, {99, 138}, {100, 153}, {101, 101}, {102, 135}, {103, 90}, {104, 99}, {105, 151}, {106, 96}, {107, 114}, {108, 134}, {109, 116}, {110, 156}, {111, 105}, {112, 130}, {113, 137}, {114, 148}, {115, 172}, {116, 155}, {119, 103}, {120, 158}, {121, 128}, {122, 110}, {124, 97}, {125, 104}, {126, 118}, {130, 93}, {131, 131}, {132, 136}, {133, 115}, {134, 100}, {135, 120}, {136, 129}, {137, 102}, {140, 140}, {141, 141}, {142, 142}, {143, 94}, {146, 109}, {147, 123}, {106, 173}};
+map<int, int> decrypt_opcode = {{1, 38}, {2, 46}, {3, 37}, {4, 66}, {5, 12}, {10, 35}, {11, 67}, {12, 81}, {13, 32}, {15, 9}, {19, 63}, {20, 70}, {21, 44}, {22, 36}, {23, 39}, {24, 57}, {25, 10}, {26, 52}, {28, 49}, {30, 86}, {31, 87}, {32, 88}, {33, 89}, {40, 24}, {41, 25}, {42, 26}, {43, 27}, {50, 14}, {51, 15}, {52, 16}, {53, 17}, {54, 8}, {55, 21}, {56, 55}, {57, 82}, {58, 34}, {59, 22}, {60, 65}, {61, 6}, {62, 58}, {63, 71}, {64, 43}, {65, 30}, {66, 19}, {67, 5}, {68, 60}, {71, 53}, {72, 42}, {73, 3}, {74, 48}, {75, 84}, {76, 77}, {77, 78}, {78, 85}, {79, 47}, {80, 51}, {81, 54}, {82, 50}, {83, 83}, {84, 74}, {85, 64}, {86, 31}, {87, 72}, {88, 45}, {89, 33}, {90, 145}, {91, 159}, {92, 125}, {93, 149}, {94, 157}, {95, 132}, {96, 95}, {97, 113}, {98, 111}, {99, 138}, {100, 153}, {101, 101}, {102, 135}, {103, 90}, {104, 99}, {105, 151}, {106, 96}, {107, 114}, {108, 134}, {109, 116}, {110, 156}, {111, 105}, {112, 130}, {113, 137}, {114, 148}, {115, 172}, {116, 155}, {119, 103}, {120, 158}, {121, 128}, {122, 110}, {124, 97}, {125, 104}, {126, 118}, {130, 93}, {131, 131}, {132, 136}, {133, 115}, {134, 100}, {135, 120}, {136, 129}, {137, 102}, {140, 140}, {141, 141}, {142, 142}, {143, 94}, {146, 109}, {147, 123}};
+// map<int, int> decrypt_opcode = {{ 101,101 },{ 131,131 },{ 1,38 },{ 116,155 },{ 2,46 },{ 90,145 },{ 97,113 },{ 3,37 },{ 100,153 },{ 4,66 },{ 85,64 },{ 99,138 },{ 33,89 },{ 55,21 },{ 5,12 },{ 43,27 },{ 10,35 },{ 11,67 },{ 12,81 },{ 13,32 },{ 15,9 },{ 19,63 },{ 20,70 },{ 21,44 },{ 22,36 },{ 23,39 },{ 24,57 },{ 25,10 },{ 26,52 },{ 28,49 },{ 30,86 },{ 31,87 },{ 32,88 },{ 40,24 },{ 41,25 },{ 42,26 },{ 50,14 },{ 51,15 },{ 52,16 },{ 53,17 },{ 105,151 },{ 54,8 },{ 56,55 },{ 57,82 },{ 58,34 },{ 59,22 },{ 60,65 },{ 61,6 },{ 62,58 },{ 63,71 },{ 64,43 },{ 65,30 },{ 66,19 },{ 67,5 },{ 120,158 },{ 68,60 },{ 93,149 },{ 113,137 },{ 87,72 },{ 71,53 },{ 72,42 },{ 73,3 },{ 74,48 },{ 75,84 },{ 76,77 },{ 77,78 },{ 78,85 },{ 79,47 },{ 114,148 },{ 80,51 },{ 143,94 },{ 81,54 },{ 88,45 },{ 132,136 },{ 89,33 },{ 108,134 },{ 84,74 },{ 91,159 },{ 92,125 },{ 103,90 },{ 94,157 },{ 95,132 },{ 96,95 },{ 102,135 },{ 104,99 },{ 106,96 },{ 107,114 },{ 109,116 },{ 110,156 },{ 111,105 },{ 112,130 },{ 115,172 },{ 121,128 },{ 119,103 },{ 122,110 },{ 130,93 },{ 133,115 },{ 140,140 },{ 141,141 },{ 142,142 },{ 83,83 },{ 0,0 },{ 149,104 },{ 76,23 },{ 249,119 },{ 0,255 },{ 232,23 },{ 2,0 }};
 
-char* deal_pycodeobj(char *lp_data);
+char *deal_pycodeobj(char *lp_data);
 
 bool isEnecrypt = false; //为真表示 加密  为假表示解密
 
@@ -53,6 +55,8 @@ char decode_opcode(int opcode)
         }
         else
         {
+            // c_ret = 0x6A;
+            // if(opcode == 173) return c_ret;
             if (iter->second == opcode)
             {
                 c_ret = iter->first & 0x000000FF;
@@ -83,27 +87,33 @@ char *sub_type(char *lp_data, char type)
         break;
     case TYPE_INT:
     {
-        lp_data += 4; 
+        lp_data += 4;
         break;
     }
-    case TYPE_INT64:// no test
+    case TYPE_INT64: // no test
     {
-        cout << "TYPE_INT64" << " -- >" << "no test!" << endl;
+        cout << "TYPE_INT64"
+             << " -- >"
+             << "no test!" << endl;
         lp_data += 8;
         break;
     }
     case TYPE_FLOAT:
     {
-        cout << "TYPE_FLOAT" << " -- >" << "no test!" << endl;
+        cout << "TYPE_FLOAT"
+             << " -- >"
+             << "no test!" << endl;
         int n_count = 0;
         char c_count = *(lp_data++);
         n_count = (int)c_count;
         lp_data += n_count;
         break;
     }
-    case TYPE_COMPLEX:// no test
+    case TYPE_COMPLEX: // no test
     {
-        cout << "TYPE_COMPLEX" << " -- >" << "no test!" << endl;
+        cout << "TYPE_COMPLEX"
+             << " -- >"
+             << "no test!" << endl;
         int n_count = 0;
         char c_count = *(lp_data++);
         n_count = (int)c_count;
@@ -115,13 +125,15 @@ char *sub_type(char *lp_data, char type)
         lp_data += n_count;
         break;
     }
-    case TYPE_LONG:// no test
+    case TYPE_LONG: // no test
     {
-        cout << "TYPE_LONG" << " -- >" << "no test!" << endl;
-        
+        // cout << "TYPE_LONG"
+        //      << " -- >"
+        //      << "no test!" << endl;
+
         int n_count = *(int *)lp_data;
         lp_data += 4;
-        lp_data += n_count;
+        lp_data +=  n_count * 2;
         break;
     }
 
@@ -162,7 +174,9 @@ char *sub_type(char *lp_data, char type)
 
     case TYPE_LIST: // no test
     {
-        cout << "TYPE_LIST" << " -- >" << "no test!" << endl;
+        cout << "TYPE_LIST"
+             << " -- >"
+             << "no test!" << endl;
 
         char c = 0x00;
         int n_count = *(int *)lp_data;
@@ -175,9 +189,11 @@ char *sub_type(char *lp_data, char type)
         break;
     }
 
-    case TYPE_DICT:// no test
+    case TYPE_DICT: // no test
     {
-        cout << "TYPE_DICT must be error" << " -- >" << "no test!" << endl;
+        cout << "TYPE_DICT must be error"
+             << " -- >"
+             << "no test!" << endl;
 
         char c = 0x00;
         while (1)
@@ -208,15 +224,19 @@ char *sub_type(char *lp_data, char type)
         break;
     }
 
-    case TYPE_UNKNOWN:// no test
+    case TYPE_UNKNOWN: // no test
     {
-        cout << "TYPE_UNKNOWN" << " -- >" << "no test!" << endl;
+        cout << "TYPE_UNKNOWN"
+             << " -- >"
+             << "no test!" << endl;
         break;
     }
 
-    case TYPE_SET:// no test
+    case TYPE_SET: // no test
     {
-        cout << "TYPE_SET" << " -- >" << "no test!" << endl;
+        cout << "TYPE_SET"
+             << " -- >"
+             << "no test!" << endl;
 
         char c = 0x00;
         int n_count = *(int *)lp_data;
@@ -231,9 +251,11 @@ char *sub_type(char *lp_data, char type)
         break;
     }
 
-    case TYPE_FROZENSET:// no test
+    case TYPE_FROZENSET: // no test
     {
-        cout << "TYPE_FROZENSET" << " -- >" << "no test!" << endl;
+        cout << "TYPE_FROZENSET"
+             << " -- >"
+             << "no test!" << endl;
 
         char c = 0x00;
         int n_count = *(int *)lp_data;
@@ -244,11 +266,16 @@ char *sub_type(char *lp_data, char type)
             c = *(lp_data++);
             lp_data = sub_type(lp_data, c);
         }
+        break;
+    }
+    case TYPE_UNKNOWNg:
+    {
+        lp_data += 8;
         break;
     }
 
     default:
-        cout << "error type" << endl;
+        cout << "error type : " << type << endl;
         break;
     }
     return lp_data;
@@ -271,7 +298,6 @@ char *deal_opcode(char *lp_data)
             i++;
             continue;
         }
-        
 
         lp_data[i] = c;
 
@@ -285,7 +311,7 @@ char *deal_opcode(char *lp_data)
     return lp_data;
 }
 
-char* deal_pycodeobj(char *lp_data)
+char *deal_pycodeobj(char *lp_data)
 {
     lp_data += 4;
     lp_data += 4;
@@ -311,28 +337,37 @@ char* deal_pycodeobj(char *lp_data)
 
 int main(int argc, char **argv)
 {
-    unsigned char magic_number[8] = {0x03,0xF3,0x0D,0x0A,0x00,0x00,0x00,0x00};
-    if( argc < 3)
+    unsigned char magic_number[8] = {0x03, 0xF3, 0x0D, 0x0A, 0x00, 0x00, 0x00, 0x00};
+    if (argc < 3)
     {
-        cout << "arg error\nnetpyc input_file_name(Maybe absolute path) output_file_name(Maybe absolute path) [is_Encrytry(0,1)(default 0)]\n" << endl;
+        cout << "arg error\nnetpyc input_file_name(Maybe absolute path) output_file_name(Maybe absolute path) [is_Encrytry(0,1)(default 0)]\n"
+             << endl;
         return 0;
     }
 
-    if(argc >= 4)
+    if (argc >= 4)
     {
-        if(argv[3][0] == '1')
+        if (argv[3][0] == '1')
             isEnecrypt = true;
     }
 
+    // map<int, int>::iterator iter;
+    // iter = decrypt_opcode.begin();
+    // while (iter != decrypt_opcode.end())
+    // {
+    //     cout << iter->first << " : " << iter->second << endl;
+    //     iter++;
+    // }
+
     // FILE *fp = fopen("/home/yuan/Desktop/stzb_patch/NeteasePycDecode/dumpx1.pyc", "rb");
-    FILE *fp = fopen(argv[1], "rb");
+    FILE *fp = fopen(argv[1], "rb"); //打开文件
     if (fp == NULL)
     {
         cout << "Input file read error" << endl;
         return 0;
     }
 
-    fseek(fp, 0, SEEK_END);
+    fseek(fp, 0, SEEK_END); //读取文件
     size_t len = ftell(fp);
     char *lp_buf = new char[len];
     // bzero(szBuf,0,len);
@@ -342,7 +377,7 @@ int main(int argc, char **argv)
 
     // lp_buf += 1; // 0x73
 
-    deal_pycodeobj(lp_buf + 1);
+    deal_pycodeobj(lp_buf + 1); //处理文件
     // isEnecrypt = true;
 
     // fp = fopen("/home/yuan/Desktop/stzb_patch/NeteasePycDecode/dumpx1_main.pyc", "wb");
@@ -353,7 +388,7 @@ int main(int argc, char **argv)
         return 0;
     }
 
-    fwrite(magic_number,1,8,fp);
+    fwrite(magic_number, 1, 8, fp);
     fwrite(lp_buf, 1, len, fp);
     fclose(fp);
     delete lp_buf;
